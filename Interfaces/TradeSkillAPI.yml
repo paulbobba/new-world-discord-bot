@@ -1,0 +1,110 @@
+openapi: '3.0.2'
+info:
+  title: New World Trade Skill Tracker
+  version: '1.0'
+servers:
+  - url: https://api.server.test/v1
+
+tags: 
+  - name: Trade Skill Tracking
+paths:
+  /tradeSkills:
+    get:
+      responses:
+        '200':
+          description: OK
+          
+  /discordAccounts/{discordAccountId}/tradeSkills:
+    parameters:
+      - $ref: '#/components/parameters/DiscordAccountId'
+    patch:
+      summary: Update or create trade skills for character
+      description: Update or create trade skills for character.
+      tags: 
+        - Trade Skill Tracking
+      operationId: tradeSkillUpsert
+      requestBody:
+        content:
+          application/merge-path+json:
+            schema:
+              $ref: '#/components/schemas/TradeSkill'
+      responses:
+        200:
+          description: Updated
+        201:
+          description: Created
+        400:
+          description: Bad Request
+          # need to add error handling here
+        
+      
+
+components:
+  parameters:
+    DiscordAccountId:
+      name: discordAccountId
+      required: true
+      in: path
+      schema:
+        type: string
+  schemas:
+    TradeSkill:
+      type: object
+      properties:
+        gathering:
+          $ref: '#/components/schemas/Gathering'
+        refining:
+          $ref: '#/components/schemas/Refining'
+        crafting:
+          $ref: '#/components/schemas/Crafting'
+
+    Gathering:
+      type: object
+      properties:
+        logging:
+          $ref: '#/components/schemas/TradeSkillLevel'
+        mining:
+          $ref: '#/components/schemas/TradeSkillLevel'
+        fishing:
+          $ref: '#/components/schemas/TradeSkillLevel'
+        harvesting:
+          $ref: '#/components/schemas/TradeSkillLevel'
+        trackingAndSkinning:
+          $ref: '#/components/schemas/TradeSkillLevel'
+          
+    Refining:
+      type: object
+      properties:
+        smelting:
+          $ref: '#/components/schemas/TradeSkillLevel'
+        woodworking:
+          $ref: '#/components/schemas/TradeSkillLevel'
+        leatherworking:
+          $ref: '#/components/schemas/TradeSkillLevel'
+        weaving:
+          $ref: '#/components/schemas/TradeSkillLevel'
+        stonecutting:
+          $ref: '#/components/schemas/TradeSkillLevel'
+
+    Crafting:
+      type: object
+      properties:
+        weaponsmithing:
+          $ref: '#/components/schemas/TradeSkillLevel'
+        armoring:
+          $ref: '#/components/schemas/TradeSkillLevel'
+        engineering:
+          $ref: '#/components/schemas/TradeSkillLevel'
+        jewelcrafting:
+          $ref: '#/components/schemas/TradeSkillLevel'
+        arcana:
+          $ref: '#/components/schemas/TradeSkillLevel'
+        cooking:
+          $ref: '#/components/schemas/TradeSkillLevel'
+        furnishing:
+          $ref: '#/components/schemas/TradeSkillLevel'
+
+    TradeSkillLevel:
+      type: integer
+      minimum: 0
+      maximum: 200
